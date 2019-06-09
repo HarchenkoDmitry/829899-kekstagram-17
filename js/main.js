@@ -2,6 +2,7 @@ var MOK_COUNT = 25;
 var COUNT_AVATARS = 6;
 var MAX_NUMBER_OF_LIKES = 200;
 var MIN_NUMBER_OF_LIKES = 15;
+var MAX_NUMBER_OF_COMMENT = 10;
 var COMMENT_TEMPLATE = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -18,21 +19,24 @@ function generateMok() {
     pictures[i] = {
       url: 'photos/' + (i + 1) + '.jpg',
       likes: getRandomNumber(MIN_NUMBER_OF_LIKES, MAX_NUMBER_OF_LIKES),
-      comments: [
-        {
-          avatar: 'img/avatar-' + getRandomNumber(1, COUNT_AVATARS) + '.jpg',
-          message: COMMENT_TEMPLATE[getRandomNumber(0, COMMENT_TEMPLATE.length)],
-          name: NAME_TEMPLATE[getRandomNumber(0, NAME_TEMPLATE.length)]
-        },
-        {
-          avatar: 'img/avatar-' + getRandomNumber(1, COUNT_AVATARS) + '.jpg',
-          message: COMMENT_TEMPLATE[getRandomNumber(0, COMMENT_TEMPLATE.length)],
-          name: NAME_TEMPLATE[getRandomNumber(0, NAME_TEMPLATE.length)]
-        },
-      ]
+      comments: generateRandomComment()
     };
   }
   return pictures;
+}
+
+function generateRandomComment() {
+  var comments = [];
+
+  for (var i = 0; i < getRandomNumber(1, MAX_NUMBER_OF_COMMENT); i++) {
+    comments[i] = {
+      avatar: 'img/avatar-' + getRandomNumber(1, COUNT_AVATARS) + '.jpg',
+      message: COMMENT_TEMPLATE[getRandomNumber(0, COMMENT_TEMPLATE.length)],
+      name: NAME_TEMPLATE[getRandomNumber(0, NAME_TEMPLATE.length)]
+    }
+  }
+
+  return comments;
 }
 
 function createPictures(pictures) {
