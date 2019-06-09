@@ -33,7 +33,8 @@ function generatePicture(i) {
 
 function generateRandomComment() {
   var comments = [];
-  for (var i = 0; i < getRandomNumber(1, MAX_COMMENTS_AMOUNT); i++) {
+  var commentAmount = getRandomNumber(1, MAX_COMMENTS_AMOUNT);
+  for (var i = 0; i < commentAmount; i++) {
     comments[i] = generateComment();
   }
   return comments;
