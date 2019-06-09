@@ -1,3 +1,5 @@
+'use strict';
+
 var MOK_COUNT = 25;
 var COUNT_AVATARS = 6;
 var MAX_NUMBER_OF_LIKES = 200;
@@ -33,7 +35,7 @@ function generateRandomComment() {
       avatar: 'img/avatar-' + getRandomNumber(1, COUNT_AVATARS) + '.jpg',
       message: COMMENT_TEMPLATE[getRandomNumber(0, COMMENT_TEMPLATE.length)],
       name: NAME_TEMPLATE[getRandomNumber(0, NAME_TEMPLATE.length)]
-    }
+    };
   }
 
   return comments;
@@ -60,7 +62,7 @@ function createPictures(pictures) {
 }
 
 function renderPictures(pictures) {
-  var pictureContainer = document.querySelector(".pictures");
+  var pictureContainer = document.querySelector('.pictures');
   var fragment = createPictures(pictures);
   pictureContainer.appendChild(fragment);
 }
@@ -71,6 +73,6 @@ function getRandomNumber(minValue, maxValue) {
 
 
 window.onload = function () {
-  pictures = generateMok();
+  var pictures = generateMok();
   renderPictures(pictures);
 };
