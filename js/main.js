@@ -30,6 +30,7 @@ var sliderLevelEffect = document.querySelector('.img-upload__effect-level');
 var pinLevelEffect = document.querySelector('.effect-level__pin');
 var depthLevelEffect = document.querySelector('.effect-level__depth');
 var levelEffect = 100;
+var currentEffectName;
 
 function generateMok() {
   var pictures = [];
@@ -130,9 +131,9 @@ function resizeImage() {
 
 function resize(sign) {
   var size = parseInt(valueScaleControl.value, 10) + STEP_SCALE * sign;
-  if (size >= MAX_VALUE_SCALE) {
+  if (size > MAX_VALUE_SCALE) {
     size = MAX_VALUE_SCALE;
-  } else if (size <= MIN_VALUE_SCALE) {
+  } else if (size < MIN_VALUE_SCALE) {
     size = MIN_VALUE_SCALE;
   }
   valueScaleControl.value = size + '%';
@@ -166,9 +167,10 @@ function applyEffectOnImage() {
 
 function changeEffect(item) {
   var effectName = item.value;
-  imgPreview.classList.remove(imgPreview.classList[0]);
+  imgPreview.classList.remove('effects__preview--' + currentEffectName);
   imgPreview.classList.add('effects__preview--' + effectName);
   sliderLevelEffect.classList.toggle('hidden', imgPreview.classList.contains('effects__preview--none'));
+  currentEffectName = effectName;
 }
 
 function controlLevelEffects() {
