@@ -18,17 +18,17 @@ var MIN_VALUE_SCALE = 25;
 var MAX_VALUE_SCALE = 100;
 var STEP_SCALE = 25;
 var formEdit = document.querySelector('.img-upload__overlay');
-var closeFormEdit = document.querySelector('.img-upload__cancel');
+var closeFormEdit = formEdit.querySelector('.img-upload__cancel');
 var inputUploadFile = document.querySelector('#upload-file');
-var imgPreview = document.querySelector('.img-upload__preview img');
-var imgsEffectEffect = document.querySelectorAll('.effects__preview');
-var valueScaleControl = document.querySelector('.scale__control--value');
-var btnZoomOut = document.querySelector('.scale__control--smaller');
-var btnZoomOn = document.querySelector('.scale__control--bigger');
-var imageEffectSwitches = document.querySelectorAll('.effects__radio');
-var sliderLevelEffect = document.querySelector('.img-upload__effect-level');
-var pinLevelEffect = document.querySelector('.effect-level__pin');
-var depthLevelEffect = document.querySelector('.effect-level__depth');
+var imgPreview = formEdit.querySelector('.img-upload__preview img');
+var imgsEffectEffect = formEdit.querySelectorAll('.effects__preview');
+var valueScaleControl = formEdit.querySelector('.scale__control--value');
+var btnZoomOut = formEdit.querySelector('.scale__control--smaller');
+var btnZoomOn = formEdit.querySelector('.scale__control--bigger');
+var imageEffectSwitches = formEdit.querySelectorAll('.effects__radio');
+var sliderLevelEffect = formEdit.querySelector('.img-upload__effect-level');
+var pinLevelEffect = formEdit.querySelector('.effect-level__pin');
+var depthLevelEffect = formEdit.querySelector('.effect-level__depth');
 var levelEffect = 100;
 var currentEffectName;
 
@@ -106,7 +106,7 @@ function showForm() {
 }
 
 function onFormEscPress(evt) {
-  if (evt.keyCode === 27) {
+  if (evt.keyCode === 27 && !document.activeElement.classList.contains('text__description')) {
     hideForm();
   }
 }
