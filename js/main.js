@@ -114,23 +114,27 @@ function hideForm() {
   formEdit.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscPress);
   inputUploadFile.value = '';
+  imgPreview.style.transform = '';
+  imgPreview.classList.remove(imgPreview.classList[0]);
 }
 
 function resizeImage() {
   btnZoomOut.addEventListener('click', function () {
-    var size = parseInt(valueScaleControl.value, 10) - STEP_SCALE;
-    size = (size <= MIN_VALUE_SCALE) ? MIN_VALUE_SCALE : size;
-    resize(size);
+    resize(-1);
   });
 
   btnZoomOn.addEventListener('click', function () {
-    var size = parseInt(valueScaleControl.value, 10) + STEP_SCALE;
-    size = (size >= MAX_VALUE_SCALE) ? MAX_VALUE_SCALE : size;
-    resize(size);
+    resize(1);
   });
 }
 
-function resize(size) {
+function resize(sign) {
+  var size = parseInt(valueScaleControl.value, 10) + STEP_SCALE * sign;
+  if (size >= MAX_VALUE_SCALE) {
+    size = MAX_VALUE_SCALE;
+  } else if (size <= MIN_VALUE_SCALE) {
+    size = MIN_VALUE_SCALE;
+  }
   valueScaleControl.value = size + '%';
   imgPreview.style.transform = 'scale(' + (size / 100) + ')';
 }
@@ -144,27 +148,27 @@ function renderPreviewImg(file) {
     imgPreview.src = '';
   }
 
-  reader.onloadend = function () {
+  reader.addEventListener('loadend', function () {
     imgPreview.src = reader.result;
     imgsEffectEffect.forEach(function (img) {
       img.style.backgroundImage = 'url(' + reader.result + ')';
     });
-  };
+  });
 }
 
 function applyEffectOnImage() {
   imageEffectSwitches.forEach(function (item) {
     item.addEventListener('click', function () {
-      var effectName = item.value;
-      imgPreview.classList.remove(imgPreview.classList[0]);
-      imgPreview.classList.add('effects__preview--' + effectName);
-      if (imgPreview.classList.contains('effects__preview--none')) {
-        sliderLevelEffect.classList.add('hidden');
-      } else {
-        sliderLevelEffect.classList.remove('hidden');
-      }
+      changeEffect(item);
     });
   });
+}
+
+function changeEffect(item) {
+  var effectName = item.value;
+  imgPreview.classList.remove(imgPreview.classList[0]);
+  imgPreview.classList.add('effects__preview--' + effectName);
+  sliderLevelEffect.classList.toggle('hidden', imgPreview.classList.contains('effects__preview--none'));
 }
 
 function controlLevelEffects() {
