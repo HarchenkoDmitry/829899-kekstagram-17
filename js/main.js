@@ -14,6 +14,23 @@ var COMMENT_TEMPLATE = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 var NAME_TEMPLATE = ['Кирилл', 'Тимур', 'Иван', 'Андрей', 'Владимир', 'Светлана', 'Нина', 'Татьяна', 'Елена', 'Галина'];
+var MIN_VALUE_SCALE = 25;
+var MAX_VALUE_SCALE = 100;
+var STEP_SCALE = 25;
+var formEdit = document.querySelector('.img-upload__overlay');
+var closeFormEdit = document.querySelector('.img-upload__cancel');
+var inputUploadFile = document.querySelector('#upload-file');
+var imgPreview = document.querySelector('.img-upload__preview img');
+var imgsEffectEffect = document.querySelectorAll('.effects__preview');
+var valueScaleControl = document.querySelector('.scale__control--value');
+var btnZoomOut = document.querySelector('.scale__control--smaller');
+var btnZoomOn = document.querySelector('.scale__control--bigger');
+var imageEffectSwitches = document.querySelectorAll('.effects__radio');
+var sliderLevelEffect = document.querySelector('.img-upload__effect-level');
+var pinLevelEffect = document.querySelector('.effect-level__pin');
+var depthLevelEffect = document.querySelector('.effect-level__depth');
+var levelEffect = 100;
+var currentEffectName;
 
 function generateMok() {
   var pictures = [];
@@ -83,9 +100,107 @@ function getRandomNumber(minValue, maxValue) {
   return Math.round(Math.random() * (maxValue - minValue) + minValue);
 }
 
+function showForm() {
+  formEdit.classList.remove('hidden');
+  document.addEventListener('keydown', onFormEscPress);
+}
+
+function onFormEscPress(evt) {
+  if (evt.keyCode === 27) {
+    hideForm();
+  }
+}
+
+function hideForm() {
+  formEdit.classList.add('hidden');
+  document.removeEventListener('keydown', onFormEscPress);
+  inputUploadFile.value = '';
+  imgPreview.style.transform = '';
+  imgPreview.classList.remove(imgPreview.classList[0]);
+}
+
+function resizeImage() {
+  btnZoomOut.addEventListener('click', function () {
+    resize(-1);
+  });
+
+  btnZoomOn.addEventListener('click', function () {
+    resize(1);
+  });
+}
+
+function resize(sign) {
+  var size = parseInt(valueScaleControl.value, 10) + STEP_SCALE * sign;
+  if (size > MAX_VALUE_SCALE) {
+    size = MAX_VALUE_SCALE;
+  } else if (size < MIN_VALUE_SCALE) {
+    size = MIN_VALUE_SCALE;
+  }
+  valueScaleControl.value = size + '%';
+  imgPreview.style.transform = 'scale(' + (size / 100) + ')';
+}
+
+function renderPreviewImg(file) {
+  var reader = new FileReader();
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    imgPreview.src = '';
+  }
+
+  reader.addEventListener('loadend', function () {
+    imgPreview.src = reader.result;
+    imgsEffectEffect.forEach(function (img) {
+      img.style.backgroundImage = 'url(' + reader.result + ')';
+    });
+  });
+}
+
+function applyEffectOnImage() {
+  imageEffectSwitches.forEach(function (item) {
+    item.addEventListener('click', function () {
+      changeEffect(item);
+    });
+  });
+}
+
+function changeEffect(item) {
+  var effectName = item.value;
+  imgPreview.classList.remove('effects__preview--' + currentEffectName);
+  imgPreview.classList.add('effects__preview--' + effectName);
+  sliderLevelEffect.classList.toggle('hidden', imgPreview.classList.contains('effects__preview--none'));
+  currentEffectName = effectName;
+}
+
+function controlLevelEffects() {
+  sliderLevelEffect.classList.add('hidden');
+  changeLevelEffects(levelEffect);
+}
+
+function changeLevelEffects(value) {
+  pinLevelEffect.style.left = value + '%';
+  depthLevelEffect.style.width = value + '%';
+}
 
 window.onload = function () {
   var pictures = generateMok();
 
   renderPictures(pictures);
+
+  inputUploadFile.addEventListener('change', function () {
+    var file = inputUploadFile.files[0];
+    if (~file.type.indexOf('image')) {
+      renderPreviewImg(file);
+      showForm();
+    }
+  });
+
+  closeFormEdit.addEventListener('click', function () {
+    hideForm();
+  });
+
+  resizeImage();
+  applyEffectOnImage();
+  controlLevelEffects();
 };
