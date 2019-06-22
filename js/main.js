@@ -157,8 +157,10 @@ function hideForm() {
 
 function clearForm() {
   inputUploadFile.value = '';
+  valueScaleControl.value = '';
   imgPreview.style.transform = '';
   imgPreview.classList.remove(imgPreview.classList[0]);
+  imageEffectSwitches[0].checked = true;
   currentEffectName = 'none';
   currentFilter = FILTER_DATA[currentEffectName];
   changeLevelEffects(1, '');
