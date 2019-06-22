@@ -17,20 +17,59 @@ var NAME_TEMPLATE = ['Кирилл', 'Тимур', 'Иван', 'Андрей', '
 var MIN_VALUE_SCALE = 25;
 var MAX_VALUE_SCALE = 100;
 var STEP_SCALE = 25;
-var formEdit = document.querySelector('.img-upload__overlay');
-var closeFormEdit = formEdit.querySelector('.img-upload__cancel');
-var inputUploadFile = document.querySelector('#upload-file');
-var imgPreview = formEdit.querySelector('.img-upload__preview img');
-var imgsEffectEffect = formEdit.querySelectorAll('.effects__preview');
-var valueScaleControl = formEdit.querySelector('.scale__control--value');
-var btnZoomOut = formEdit.querySelector('.scale__control--smaller');
-var btnZoomOn = formEdit.querySelector('.scale__control--bigger');
-var imageEffectSwitches = formEdit.querySelectorAll('.effects__radio');
-var sliderLevelEffect = formEdit.querySelector('.img-upload__effect-level');
-var pinLevelEffect = formEdit.querySelector('.effect-level__pin');
-var depthLevelEffect = formEdit.querySelector('.effect-level__depth');
-var levelEffect = 100;
-var currentEffectName;
+var FILTER_DATA = {
+  none: {
+    name: '',
+    minValue: 0,
+    maxValue: 0,
+    dimension: ''
+  },
+  chrome: {
+    name: 'grayscale',
+    minValue: 0,
+    maxValue: 1,
+    dimension: ''
+  },
+  sepia: {
+    name: 'sepia',
+    minValue: 0,
+    maxValue: 1,
+    dimension: ''
+  },
+  marvin: {
+    name: 'invert',
+    minValue: 0,
+    maxValue: 100,
+    dimension: '%'
+  },
+  phobos: {
+    name: 'blur',
+    minValue: 0,
+    maxValue: 3,
+    dimension: 'px'
+  },
+  heat: {
+    name: 'brightness',
+    minValue: 1,
+    maxValue: 3,
+    dimension: ''
+  }
+};
+var form = document.querySelector('.img-upload__form');
+var modalContainer = form.querySelector('.img-upload__overlay');
+var closeForm = form.querySelector('.img-upload__cancel');
+var inputUploadFile = form.querySelector('#upload-file');
+var imgPreview = form.querySelector('.img-upload__preview img');
+var imgsEffectEffect = form.querySelectorAll('.effects__preview');
+var valueScaleControl = form.querySelector('.scale__control--value');
+var btnZoomOut = form.querySelector('.scale__control--smaller');
+var btnZoomOn = form.querySelector('.scale__control--bigger');
+var imageEffectSwitches = form.querySelectorAll('.effects__radio');
+var sliderLevelEffect = form.querySelector('.img-upload__effect-level');
+var pinLevelEffect = form.querySelector('.effect-level__pin');
+var depthLevelEffect = form.querySelector('.effect-level__depth');
+var currentEffectName = 'none';
+var currentFilter = FILTER_DATA[currentEffectName];
 
 function generateMok() {
   var pictures = [];
@@ -101,7 +140,7 @@ function getRandomNumber(minValue, maxValue) {
 }
 
 function showForm() {
-  formEdit.classList.remove('hidden');
+  modalContainer.classList.remove('hidden');
   document.addEventListener('keydown', onFormEscPress);
 }
 
@@ -112,11 +151,18 @@ function onFormEscPress(evt) {
 }
 
 function hideForm() {
-  formEdit.classList.add('hidden');
+  modalContainer.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscPress);
-  inputUploadFile.value = '';
+  clearForm();
+}
+
+function clearForm() {
+  form.reset();
   imgPreview.style.transform = '';
   imgPreview.classList.remove(imgPreview.classList[0]);
+  currentEffectName = 'none';
+  currentFilter = FILTER_DATA[currentEffectName];
+  changeLevelEffects(1, '');
 }
 
 function resizeImage() {
@@ -158,6 +204,7 @@ function renderPreviewImg(file) {
 }
 
 function applyEffectOnImage() {
+  changeEffect(imageEffectSwitches[0]);
   imageEffectSwitches.forEach(function (item) {
     item.addEventListener('click', function () {
       changeEffect(item);
@@ -171,16 +218,54 @@ function changeEffect(item) {
   imgPreview.classList.add('effects__preview--' + effectName);
   sliderLevelEffect.classList.toggle('hidden', imgPreview.classList.contains('effects__preview--none'));
   currentEffectName = effectName;
+
+  currentFilter = FILTER_DATA[effectName];
+  changeLevelEffects(1, currentFilter);
 }
 
-function controlLevelEffects() {
-  sliderLevelEffect.classList.add('hidden');
-  changeLevelEffects(levelEffect);
+function addMouseEventListener() {
+  var container = document.querySelector('.img-upload__effect-level');
+  var pinContainer = container.querySelector('.effect-level__line');
+
+  pinLevelEffect.addEventListener('mousedown', function (evt) {
+    var posCenterOfPin = pinLevelEffect.getBoundingClientRect().left + pinLevelEffect.getBoundingClientRect().width / 2;
+    var shift = evt.clientX - posCenterOfPin;
+    var posPinContainer = pinContainer.getBoundingClientRect().left;
+    var widthPinContainer = pinContainer.getBoundingClientRect().width;
+
+    function onMouseMove(moveEvt) {
+      moveEvt.preventDefault();
+      var posPinInPercent = (moveEvt.clientX - shift - posPinContainer) / widthPinContainer;
+
+      if (posPinInPercent >= 1) {
+        posPinInPercent = 1;
+      } else if (posPinInPercent <= 0) {
+        posPinInPercent = 0;
+      }
+
+      changeLevelEffects(posPinInPercent, currentFilter);
+    }
+
+    function onMouseUp(upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+  changeLevelEffects(1, '');
 }
 
-function changeLevelEffects(value) {
-  pinLevelEffect.style.left = value + '%';
-  depthLevelEffect.style.width = value + '%';
+function changeLevelEffects(ratio, filter) {
+  var filterRatio = ratio * (filter.maxValue - filter.minValue) + filter.minValue;
+
+  pinLevelEffect.style.left = ratio * 100 + '%';
+  depthLevelEffect.style.width = ratio * 100 + '%';
+  imgPreview.style.filter = (filter) ? filter.name + '(' + filterRatio + filter.dimension + ')' : '';
 }
 
 window.onload = function () {
@@ -193,14 +278,15 @@ window.onload = function () {
     if (~file.type.indexOf('image')) {
       renderPreviewImg(file);
       showForm();
+
+      applyEffectOnImage();
     }
   });
 
-  closeFormEdit.addEventListener('click', function () {
+  closeForm.addEventListener('click', function () {
     hideForm();
   });
 
   resizeImage();
-  applyEffectOnImage();
-  controlLevelEffects();
+  addMouseEventListener();
 };
