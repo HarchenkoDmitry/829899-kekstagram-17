@@ -27,51 +27,48 @@ var btnZoomOut = formEdit.querySelector('.scale__control--smaller');
 var btnZoomOn = formEdit.querySelector('.scale__control--bigger');
 var imageEffectSwitches = formEdit.querySelectorAll('.effects__radio');
 var sliderLevelEffect = formEdit.querySelector('.img-upload__effect-level');
-var FILTER_DATA = [
-  {
-    stylePrefix: 'none',
+var pinLevelEffect = formEdit.querySelector('.effect-level__pin');
+var depthLevelEffect = formEdit.querySelector('.effect-level__depth');
+var FILTER_DATA = {
+  none: {
     name: '',
     minValue: 0,
     maxValue: 0,
     dimension: ''
   },
-  {
-    stylePrefix: 'chrome',
+  chrome: {
     name: 'grayscale',
     minValue: 0,
     maxValue: 1,
     dimension: ''
   },
-  {
-    stylePrefix: 'sepia',
+  sepia: {
     name: 'sepia',
     minValue: 0,
     maxValue: 1,
     dimension: ''
   },
-  {
-    stylePrefix: 'marvin',
+  marvin: {
     name: 'invert',
     minValue: 0,
     maxValue: 100,
     dimension: '%'
   },
-  {
-    stylePrefix: 'phobos',
+  phobos: {
     name: 'blur',
     minValue: 0,
     maxValue: 3,
     dimension: 'px'
   },
-  {
-    stylePrefix: 'heat',
+  heat: {
     name: 'brightness',
     minValue: 1,
     maxValue: 3,
     dimension: ''
   }
-];
-var currentEffectName;
+};
+var currentEffectName = 'none';
+var currentFilter = FILTER_DATA[currentEffectName];
 
 function generateMok() {
   var pictures = [];
@@ -214,30 +211,16 @@ function changeEffect(item) {
   sliderLevelEffect.classList.toggle('hidden', imgPreview.classList.contains('effects__preview--none'));
   currentEffectName = effectName;
 
-  for (var i = 0; i < FILTER_DATA.length; i++) {
-    if (effectName === FILTER_DATA[i].stylePrefix) {
-      controlLevelEffects(imgPreview, FILTER_DATA[i]);
-      break;
-    }
-  }
+  currentFilter = FILTER_DATA[effectName];
+  changeLevelEffects(1, currentFilter);
 }
 
-function controlLevelEffects(img, filterData) {
+function controlLevelEffects() {
   var container = document.querySelector('.img-upload__effect-level');
   var pinContainer = container.querySelector('.effect-level__line');
-  var pin = container.querySelector('.effect-level__pin');
-  var depth = container.querySelector('.effect-level__depth');
 
-  function changeLevelEffects(ratio, filter) {
-    var filterRatio = ratio * (filter.maxValue - filter.minValue) + filter.minValue;
-
-    pin.style.left = ratio * 100 + '%';
-    depth.style.width = ratio * 100 + '%';
-    img.style.filter = (filter) ? filter.name + '(' + filterRatio + filter.dimension + ')' : '';
-  }
-
-  pin.addEventListener('mousedown', function (evt) {
-    var posCenterOfPin = pin.getBoundingClientRect().left + pin.getBoundingClientRect().width / 2;
+  pinLevelEffect.addEventListener('mousedown', function (evt) {
+    var posCenterOfPin = pinLevelEffect.getBoundingClientRect().left + pinLevelEffect.getBoundingClientRect().width / 2;
     var shift = evt.clientX - posCenterOfPin;
     var posPinContainer = pinContainer.getBoundingClientRect().left;
     var widthPinContainer = pinContainer.getBoundingClientRect().width;
@@ -252,7 +235,7 @@ function controlLevelEffects(img, filterData) {
         posPinInPercent = 0;
       }
 
-      changeLevelEffects(posPinInPercent, filterData);
+      changeLevelEffects(posPinInPercent, currentFilter);
     }
 
     function onMouseUp(upEvt) {
@@ -267,6 +250,14 @@ function controlLevelEffects(img, filterData) {
   });
 
   changeLevelEffects(1, '');
+}
+
+function changeLevelEffects(ratio, filter) {
+  var filterRatio = ratio * (filter.maxValue - filter.minValue) + filter.minValue;
+
+  pinLevelEffect.style.left = ratio * 100 + '%';
+  depthLevelEffect.style.width = ratio * 100 + '%';
+  imgPreview.style.filter = (filter) ? filter.name + '(' + filterRatio + filter.dimension + ')' : '';
 }
 
 window.onload = function () {
@@ -289,6 +280,5 @@ window.onload = function () {
   });
 
   resizeImage();
-
-
+  controlLevelEffects();
 };
