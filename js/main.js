@@ -152,9 +152,16 @@ function onFormEscPress(evt) {
 function hideForm() {
   formEdit.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscPress);
+  clearForm();
+}
+
+function clearForm() {
   inputUploadFile.value = '';
   imgPreview.style.transform = '';
   imgPreview.classList.remove(imgPreview.classList[0]);
+  currentEffectName = 'none';
+  currentFilter = FILTER_DATA[currentEffectName];
+  changeLevelEffects(1, '');
 }
 
 function resizeImage() {
@@ -215,7 +222,7 @@ function changeEffect(item) {
   changeLevelEffects(1, currentFilter);
 }
 
-function controlLevelEffects() {
+function addMouseEventListener() {
   var container = document.querySelector('.img-upload__effect-level');
   var pinContainer = container.querySelector('.effect-level__line');
 
@@ -280,5 +287,5 @@ window.onload = function () {
   });
 
   resizeImage();
-  controlLevelEffects();
+  addMouseEventListener();
 };
