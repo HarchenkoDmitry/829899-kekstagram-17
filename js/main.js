@@ -27,9 +27,50 @@ var btnZoomOut = formEdit.querySelector('.scale__control--smaller');
 var btnZoomOn = formEdit.querySelector('.scale__control--bigger');
 var imageEffectSwitches = formEdit.querySelectorAll('.effects__radio');
 var sliderLevelEffect = formEdit.querySelector('.img-upload__effect-level');
-var pinLevelEffect = formEdit.querySelector('.effect-level__pin');
-var depthLevelEffect = formEdit.querySelector('.effect-level__depth');
-var levelEffect = 100;
+var FILTER_DATA = [
+  {
+    stylePrefix: 'none',
+    name: '',
+    minValue: 0,
+    maxValue: 0,
+    dimension: ''
+  },
+  {
+    stylePrefix: 'chrome',
+    name: 'grayscale',
+    minValue: 0,
+    maxValue: 1,
+    dimension: ''
+  },
+  {
+    stylePrefix: 'sepia',
+    name: 'sepia',
+    minValue: 0,
+    maxValue: 1,
+    dimension: ''
+  },
+  {
+    stylePrefix: 'marvin',
+    name: 'invert',
+    minValue: 0,
+    maxValue: 100,
+    dimension: '%'
+  },
+  {
+    stylePrefix: 'phobos',
+    name: 'blur',
+    minValue: 0,
+    maxValue: 3,
+    dimension: 'px'
+  },
+  {
+    stylePrefix: 'heat',
+    name: 'brightness',
+    minValue: 1,
+    maxValue: 3,
+    dimension: ''
+  }
+];
 var currentEffectName;
 
 function generateMok() {
@@ -158,6 +199,7 @@ function renderPreviewImg(file) {
 }
 
 function applyEffectOnImage() {
+  changeEffect(imageEffectSwitches[0]);
   imageEffectSwitches.forEach(function (item) {
     item.addEventListener('click', function () {
       changeEffect(item);
@@ -171,16 +213,60 @@ function changeEffect(item) {
   imgPreview.classList.add('effects__preview--' + effectName);
   sliderLevelEffect.classList.toggle('hidden', imgPreview.classList.contains('effects__preview--none'));
   currentEffectName = effectName;
+
+  for (var i = 0; i < FILTER_DATA.length; i++) {
+    if (effectName === FILTER_DATA[i].stylePrefix) {
+      controlLevelEffects(imgPreview, FILTER_DATA[i]);
+      break;
+    }
+  }
 }
 
-function controlLevelEffects() {
-  sliderLevelEffect.classList.add('hidden');
-  changeLevelEffects(levelEffect);
-}
+function controlLevelEffects(img, filterData) {
+  var container = document.querySelector('.img-upload__effect-level');
+  var pinContainer = container.querySelector('.effect-level__line');
+  var pin = container.querySelector('.effect-level__pin');
+  var depth = container.querySelector('.effect-level__depth');
 
-function changeLevelEffects(value) {
-  pinLevelEffect.style.left = value + '%';
-  depthLevelEffect.style.width = value + '%';
+  function changeLevelEffects(ratio, filter) {
+    var filterRatio = ratio * (filter.maxValue - filter.minValue) + filter.minValue;
+
+    pin.style.left = ratio * 100 + '%';
+    depth.style.width = ratio * 100 + '%';
+    img.style.filter = (filter) ? filter.name + '(' + filterRatio + filter.dimension + ')' : '';
+  }
+
+  pin.addEventListener('mousedown', function (evt) {
+    var posCenterOfPin = pin.getBoundingClientRect().left + pin.getBoundingClientRect().width / 2;
+    var shift = evt.clientX - posCenterOfPin;
+    var posPinContainer = pinContainer.getBoundingClientRect().left;
+    var widthPinContainer = pinContainer.getBoundingClientRect().width;
+
+    function onMouseMove(moveEvt) {
+      moveEvt.preventDefault();
+      var posPinInPercent = (moveEvt.clientX - shift - posPinContainer) / widthPinContainer;
+
+      if (posPinInPercent >= 1) {
+        posPinInPercent = 1;
+      } else if (posPinInPercent <= 0) {
+        posPinInPercent = 0;
+      }
+
+      changeLevelEffects(posPinInPercent, filterData);
+    }
+
+    function onMouseUp(upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+  changeLevelEffects(1, '');
 }
 
 window.onload = function () {
@@ -193,6 +279,8 @@ window.onload = function () {
     if (~file.type.indexOf('image')) {
       renderPreviewImg(file);
       showForm();
+
+      applyEffectOnImage();
     }
   });
 
@@ -201,6 +289,6 @@ window.onload = function () {
   });
 
   resizeImage();
-  applyEffectOnImage();
-  controlLevelEffects();
+
+
 };
