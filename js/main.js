@@ -55,18 +55,19 @@ var FILTER_DATA = {
     dimension: ''
   }
 };
-var formEdit = document.querySelector('.img-upload__overlay');
-var closeFormEdit = formEdit.querySelector('.img-upload__cancel');
-var inputUploadFile = document.querySelector('#upload-file');
-var imgPreview = formEdit.querySelector('.img-upload__preview img');
-var imgsEffectEffect = formEdit.querySelectorAll('.effects__preview');
-var valueScaleControl = formEdit.querySelector('.scale__control--value');
-var btnZoomOut = formEdit.querySelector('.scale__control--smaller');
-var btnZoomOn = formEdit.querySelector('.scale__control--bigger');
-var imageEffectSwitches = formEdit.querySelectorAll('.effects__radio');
-var sliderLevelEffect = formEdit.querySelector('.img-upload__effect-level');
-var pinLevelEffect = formEdit.querySelector('.effect-level__pin');
-var depthLevelEffect = formEdit.querySelector('.effect-level__depth');
+var form = document.querySelector('.img-upload__form');
+var modalContainer = form.querySelector('.img-upload__overlay');
+var closeForm = form.querySelector('.img-upload__cancel');
+var inputUploadFile = form.querySelector('#upload-file');
+var imgPreview = form.querySelector('.img-upload__preview img');
+var imgsEffectEffect = form.querySelectorAll('.effects__preview');
+var valueScaleControl = form.querySelector('.scale__control--value');
+var btnZoomOut = form.querySelector('.scale__control--smaller');
+var btnZoomOn = form.querySelector('.scale__control--bigger');
+var imageEffectSwitches = form.querySelectorAll('.effects__radio');
+var sliderLevelEffect = form.querySelector('.img-upload__effect-level');
+var pinLevelEffect = form.querySelector('.effect-level__pin');
+var depthLevelEffect = form.querySelector('.effect-level__depth');
 var currentEffectName = 'none';
 var currentFilter = FILTER_DATA[currentEffectName];
 
@@ -139,7 +140,7 @@ function getRandomNumber(minValue, maxValue) {
 }
 
 function showForm() {
-  formEdit.classList.remove('hidden');
+  modalContainer.classList.remove('hidden');
   document.addEventListener('keydown', onFormEscPress);
 }
 
@@ -150,17 +151,15 @@ function onFormEscPress(evt) {
 }
 
 function hideForm() {
-  formEdit.classList.add('hidden');
+  modalContainer.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscPress);
   clearForm();
 }
 
 function clearForm() {
-  inputUploadFile.value = '';
-  valueScaleControl.value = '';
+  form.reset();
   imgPreview.style.transform = '';
   imgPreview.classList.remove(imgPreview.classList[0]);
-  imageEffectSwitches[0].checked = true;
   currentEffectName = 'none';
   currentFilter = FILTER_DATA[currentEffectName];
   changeLevelEffects(1, '');
@@ -284,7 +283,7 @@ window.onload = function () {
     }
   });
 
-  closeFormEdit.addEventListener('click', function () {
+  closeForm.addEventListener('click', function () {
     hideForm();
   });
 
