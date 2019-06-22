@@ -17,18 +17,6 @@ var NAME_TEMPLATE = ['Кирилл', 'Тимур', 'Иван', 'Андрей', '
 var MIN_VALUE_SCALE = 25;
 var MAX_VALUE_SCALE = 100;
 var STEP_SCALE = 25;
-var formEdit = document.querySelector('.img-upload__overlay');
-var closeFormEdit = formEdit.querySelector('.img-upload__cancel');
-var inputUploadFile = document.querySelector('#upload-file');
-var imgPreview = formEdit.querySelector('.img-upload__preview img');
-var imgsEffectEffect = formEdit.querySelectorAll('.effects__preview');
-var valueScaleControl = formEdit.querySelector('.scale__control--value');
-var btnZoomOut = formEdit.querySelector('.scale__control--smaller');
-var btnZoomOn = formEdit.querySelector('.scale__control--bigger');
-var imageEffectSwitches = formEdit.querySelectorAll('.effects__radio');
-var sliderLevelEffect = formEdit.querySelector('.img-upload__effect-level');
-var pinLevelEffect = formEdit.querySelector('.effect-level__pin');
-var depthLevelEffect = formEdit.querySelector('.effect-level__depth');
 var FILTER_DATA = {
   none: {
     name: '',
@@ -67,6 +55,18 @@ var FILTER_DATA = {
     dimension: ''
   }
 };
+var formEdit = document.querySelector('.img-upload__overlay');
+var closeFormEdit = formEdit.querySelector('.img-upload__cancel');
+var inputUploadFile = document.querySelector('#upload-file');
+var imgPreview = formEdit.querySelector('.img-upload__preview img');
+var imgsEffectEffect = formEdit.querySelectorAll('.effects__preview');
+var valueScaleControl = formEdit.querySelector('.scale__control--value');
+var btnZoomOut = formEdit.querySelector('.scale__control--smaller');
+var btnZoomOn = formEdit.querySelector('.scale__control--bigger');
+var imageEffectSwitches = formEdit.querySelectorAll('.effects__radio');
+var sliderLevelEffect = formEdit.querySelector('.img-upload__effect-level');
+var pinLevelEffect = formEdit.querySelector('.effect-level__pin');
+var depthLevelEffect = formEdit.querySelector('.effect-level__depth');
 var currentEffectName = 'none';
 var currentFilter = FILTER_DATA[currentEffectName];
 
