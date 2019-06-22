@@ -32,7 +32,5 @@
     return fragment;
   }
 
-  window.addEventListener('load', function () {
-    renderPictures(window.pictures);
-  });
+  renderPictures(window.pictures);
 })();

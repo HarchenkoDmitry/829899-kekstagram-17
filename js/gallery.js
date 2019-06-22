@@ -23,13 +23,10 @@
     });
   }
 
-  window.onload = function () {
-    inputUploadFile.addEventListener('change', function () {
-      var file = inputUploadFile.files[0];
-      if (~file.type.indexOf('image')) {
-        renderPreviewImg(file);
-      }
-    });
-  };
-
+  inputUploadFile.addEventListener('change', function () {
+    var file = inputUploadFile.files[0];
+    if (~file.type.indexOf('image')) {
+      renderPreviewImg(file);
+    }
+  });
 })();

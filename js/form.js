@@ -24,18 +24,16 @@
     window.resetPhotoChanges();
   }
 
-  window.addEventListener('load', function () {
-    inputUploadFile.addEventListener('change', function () {
-      var file = inputUploadFile.files[0];
-      if (~file.type.indexOf('image')) {
-        showForm();
+  inputUploadFile.addEventListener('change', function () {
+    var file = inputUploadFile.files[0];
+    if (~file.type.indexOf('image')) {
+      showForm();
 
-        window.applyEffectOnImage();
-      }
-    });
+      window.applyEffectOnImage();
+    }
+  });
 
-    closeForm.addEventListener('click', function () {
-      hideForm();
-    });
+  closeForm.addEventListener('click', function () {
+    hideForm();
   });
 })();

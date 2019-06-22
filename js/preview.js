@@ -131,26 +131,27 @@
     imgPreview.style.filter = (filter) ? filter.name + '(' + filterRatio + filter.dimension + ')' : '';
   }
 
-  window.addEventListener('load', function () {
-    resizeImage();
-    addMouseEventListener();
-  });
-
-  window.resetPhotoChanges = function () {
+  function resetPhotoChanges() {
     imgPreview.style.transform = '';
     imgPreview.classList.remove(imgPreview.classList[0]);
     currentEffectName = 'none';
     currentFilter = FILTER_DATA[currentEffectName];
     changeLevelEffects(1, '');
-  };
+  }
 
-  window.applyEffectOnImage = function () {
+  function applyEffectOnImage() {
     changeEffect(imageEffectSwitches[0]);
     imageEffectSwitches.forEach(function (item) {
       item.addEventListener('click', function () {
         changeEffect(item);
       });
     });
-  };
+  }
+
+  resizeImage();
+  addMouseEventListener();
+
+  window.resetPhotoChanges = resetPhotoChanges;
+  window.applyEffectOnImage = applyEffectOnImage;
 })();
 
