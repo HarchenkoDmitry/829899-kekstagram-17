@@ -32,5 +32,16 @@
     return fragment;
   }
 
-  renderPictures(window.pictures);
+  function successHandler(pictures) {
+    renderPictures(pictures);
+  }
+
+  function errorHandler(errorMassage) {
+    var massageContainer = document.createElement('div');
+    massageContainer.textContent = errorMassage;
+    massageContainer.classList.add('error-massage');
+    document.body.appendChild(massageContainer);
+  }
+
+  window.backend(successHandler, errorHandler);
 })();
