@@ -23,10 +23,19 @@
     });
   }
 
+  function createPictures(pictures) {
+    var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < pictures.length; i++) {
+      fragment = window.renderPicture(fragment, pictureTemplate, pictures[i]);
+    }
+    return fragment;
+  }
+
   function renderPictures(picturesData) {
     var pictureContainer = document.querySelector('.pictures');
     var pictures = pictureContainer.querySelectorAll('.picture');
-    var fragment = window.createPictures(picturesData);
+    var fragment = createPictures(picturesData);
 
     pictures.forEach(function (picture) {
       pictureContainer.removeChild(picture);

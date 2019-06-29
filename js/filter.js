@@ -43,7 +43,6 @@
       timerId = setTimeout(function () {
         if (buttonChecked !== btn) {
           applyFilter(pictures, filterName);
-          timerId = null;
           buttonChecked = btn;
         }
       }, DELAY_TIME);

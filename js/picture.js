@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  function generateFragment(fragment, template, picture) {
+  function renderPicture(fragment, template, picture) {
     var pictureClone = template.cloneNode(true);
     var img = pictureClone.querySelector('.picture__img');
     var likes = pictureClone.querySelector('.picture__likes');
@@ -16,14 +16,5 @@
     return fragment;
   }
 
-  function createPictures(pictures) {
-    var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pictures.length; i++) {
-      fragment = generateFragment(fragment, pictureTemplate, pictures[i]);
-    }
-    return fragment;
-  }
-
-  window.createPictures = createPictures;
+  window.renderPicture = renderPicture;
 })();
