@@ -23,10 +23,37 @@
     });
   }
 
+  function renderPictures(picturesData) {
+    var pictureContainer = document.querySelector('.pictures');
+    var pictures = pictureContainer.querySelectorAll('.picture');
+    var fragment = window.createPictures(picturesData);
+
+    pictures.forEach(function (picture) {
+      pictureContainer.removeChild(picture);
+    });
+    pictureContainer.appendChild(fragment);
+  }
+
+  function successHandler(pictures) {
+    renderPictures(pictures);
+    window.filter(pictures);
+  }
+
+  function errorHandler(errorMassage) {
+    var massageContainer = document.createElement('div');
+    massageContainer.textContent = errorMassage;
+    massageContainer.classList.add('error-massage');
+    document.body.appendChild(massageContainer);
+  }
+
+
   inputUploadFile.addEventListener('change', function () {
     var file = inputUploadFile.files[0];
     if (~file.type.indexOf('image')) {
       renderPreviewImg(file);
     }
   });
+
+  window.backend(successHandler, errorHandler);
+  window.renderPictures = renderPictures;
 })();

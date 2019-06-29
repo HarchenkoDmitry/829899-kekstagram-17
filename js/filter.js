@@ -9,6 +9,7 @@
       NEW: 'filter-new',
       DISCUSSED: 'filter-discussed'
     };
+    var pictures = data;
     var filterContainer = document.querySelector('.img-filters');
     var filterButtons = filterContainer.querySelectorAll('.img-filters__button');
     var activeClassButton = 'img-filters__button--active';
@@ -21,7 +22,7 @@
 
     function addHandlerToFilter() {
       filterContainer.addEventListener('click', function (evt) {
-        if (evt.target.tagName.toLowerCase() === 'button' && !evt.target.classList.contains(activeClassButton)) {
+        if (evt.target.type === 'button' && !evt.target.classList.contains(activeClassButton)) {
           changeFilter(evt.target);
         }
       });
@@ -41,7 +42,7 @@
 
       timerId = setTimeout(function () {
         if (buttonChecked !== btn) {
-          applyFilter(data, filterName);
+          applyFilter(pictures, filterName);
           timerId = null;
           buttonChecked = btn;
         }
