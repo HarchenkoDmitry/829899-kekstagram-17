@@ -1,10 +1,14 @@
 'use strict';
 
 (function () {
-  function renderPictures(pictures) {
+  function renderPictures(picturesData) {
     var pictureContainer = document.querySelector('.pictures');
-    var fragment = createPictures(pictures);
+    var pictures = pictureContainer.querySelectorAll('.picture');
+    var fragment = createPictures(picturesData);
 
+    pictures.forEach(function (picture) {
+      pictureContainer.removeChild(picture);
+    });
     pictureContainer.appendChild(fragment);
   }
 
@@ -34,6 +38,7 @@
 
   function successHandler(pictures) {
     renderPictures(pictures);
+    window.filter(pictures);
   }
 
   function errorHandler(errorMassage) {
@@ -44,4 +49,6 @@
   }
 
   window.backend(successHandler, errorHandler);
+
+  window.renderPictures = renderPictures;
 })();
