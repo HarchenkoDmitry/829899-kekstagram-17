@@ -9,7 +9,7 @@
       NEW: 'filter-new',
       DISCUSSED: 'filter-discussed'
     };
-    var pictures = data;
+    var picturesData = data;
     var filterContainer = document.querySelector('.img-filters');
     var filterButtons = filterContainer.querySelectorAll('.img-filters__button');
     var activeClassButton = 'img-filters__button--active';
@@ -42,13 +42,13 @@
 
       timerId = setTimeout(function () {
         if (buttonChecked !== btn) {
-          applyFilter(pictures, filterName);
+          applyFilter(filterName);
           buttonChecked = btn;
         }
       }, DELAY_TIME);
     }
 
-    function applyFilter(picturesData, filterName) {
+    function applyFilter(filterName) {
       var sortedPictures;
 
       switch (filterName) {
