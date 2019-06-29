@@ -49,17 +49,12 @@
     }
 
     function applyFilter(filterName) {
-      var sortedPictures;
+      var sortedPictures = picturesData.slice();
 
       switch (filterName) {
 
-        case FilterName.POPULAR:
-          sortedPictures = picturesData;
-          break;
-
         case FilterName.NEW:
-          sortedPictures = picturesData
-            .slice()
+          sortedPictures = sortedPictures
             .sort(function () {
               return Math.random() - 0.5;
             })
@@ -67,8 +62,7 @@
           break;
 
         case FilterName.DISCUSSED:
-          sortedPictures = picturesData
-            .slice()
+          sortedPictures = sortedPictures
             .sort(function (first, second) {
               return second.comments.length - first.comments.length;
             });
