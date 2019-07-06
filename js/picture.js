@@ -1,20 +1,28 @@
 'use strict';
 
 (function () {
-  function renderPicture(fragment, template, picture) {
-    var pictureClone = template.cloneNode(true);
+  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+  function Picture(data) {
+    this.url = data.url;
+    this.likes = data.likes;
+    this.description = data.description;
+    this.comments = data.comments;
+  }
+
+  Picture.prototype.create = function () {
+    var pictureClone = pictureTemplate.cloneNode(true);
     var img = pictureClone.querySelector('.picture__img');
     var likes = pictureClone.querySelector('.picture__likes');
     var comments = pictureClone.querySelector('.picture__comments');
 
-    img.src = picture.url;
-    likes.textContent = picture.likes;
-    comments.textContent = String(picture.comments.length);
+    img.src = this.url;
+    likes.textContent = this.likes;
+    comments.textContent = String(this.comments.length);
 
-    fragment.appendChild(pictureClone);
+    return pictureClone;
+  };
 
-    return fragment;
-  }
 
-  window.renderPicture = renderPicture;
+  window.Picture = Picture;
 })();
