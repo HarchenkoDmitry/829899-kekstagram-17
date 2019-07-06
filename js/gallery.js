@@ -39,7 +39,7 @@
     var picturesWrap = pictureContainer.querySelectorAll('.picture');
 
     picturesWrap.forEach(function (pictureItem, i) {
-      pictures[i].remove(pictureItem);
+      pictures[i].remove();
     });
 
     var fragment = createPictures(picturesData);
