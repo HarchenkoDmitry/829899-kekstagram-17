@@ -5,6 +5,7 @@
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgsEffectEffect = document.querySelectorAll('.effects__preview');
   var inputUploadFile = document.querySelector('#upload-file');
+  var pictures = [];
 
 
   function renderPreviewImg(file) {
@@ -24,30 +25,31 @@
     });
   }
 
-  function createPictures(pictures) {
-    var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+  function createPictures(picturesData) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pictures.length; i++) {
-      fragment = window.renderPicture(fragment, pictureTemplate, pictures[i]);
+    for (var i = 0; i < picturesData.length; i++) {
+      pictures[i] = new window.Picture(picturesData[i]);
+      fragment.appendChild(pictures[i].create());
     }
     return fragment;
   }
 
-  function renderPictures(pictures) {
+  function renderPictures(picturesData) {
     var pictureContainer = document.querySelector('.pictures');
     var picturesWrap = pictureContainer.querySelectorAll('.picture');
-    var fragment = createPictures(pictures);
 
-    picturesWrap.forEach(function (picture) {
-      pictureContainer.removeChild(picture);
+    picturesWrap.forEach(function (pictureItem, i) {
+      pictures[i].remove();
     });
+
+    var fragment = createPictures(picturesData);
+
     pictureContainer.appendChild(fragment);
   }
 
-  function successHandler(pictures) {
-    renderPictures(pictures);
-    window.filter(pictures);
-    addHandlerToGallery(pictures);
+  function successHandler(picturesData) {
+    renderPictures(picturesData);
+    window.filter(picturesData);
   }
 
   function errorHandler(errorMassage) {
@@ -63,15 +65,6 @@
       renderPreviewImg(file);
     }
   });
-
-  function addHandlerToGallery(picturesData) {
-    var pictures = document.querySelectorAll('.picture');
-    pictures.forEach(function (picture, i) {
-      picture.addEventListener('click', function () {
-        window.renderFullScreenPhoto(picturesData[i]);
-      });
-    });
-  }
 
   window.backend(successHandler, errorHandler);
   window.renderPictures = renderPictures;

@@ -11,24 +11,16 @@
   var commentsCount = modalContainer.querySelector('.social__comment-count');
   var commentLoader = modalContainer.querySelector('.comments-loader');
 
-  commentsCount.classList.add('visually-hidden');
-  commentLoader.classList.add('visually-hidden');
-
   function renderPhoto(picture) {
-    fullScreenModal.open();
     photo.src = picture.url;
     description.textContent = picture.description;
     likes.textContent = picture.likes;
     renderComments(picture.comments);
+    fullScreenModal.open();
   }
 
   function renderComments(commentsData) {
-    var comments = commentsContainer.querySelectorAll('.social__comment');
     var fragment = document.createDocumentFragment();
-
-    comments.forEach(function (comment) {
-      commentsContainer.removeChild(comment);
-    });
 
     commentsData.forEach(function (comment) {
       var commentClone = createComment(comment);
@@ -47,6 +39,25 @@
 
     return commentClone;
   }
+
+  function resetPhoto() {
+    var comments = commentsContainer.querySelectorAll('.social__comment');
+
+    photo.src = '';
+    description.textContent = '';
+    likes.textContent = '';
+
+    comments.forEach(function (comment) {
+      commentsContainer.removeChild(comment);
+    });
+  }
+
+  fullScreenModal.onClose = function () {
+    resetPhoto();
+  };
+
+  commentsCount.classList.add('visually-hidden');
+  commentLoader.classList.add('visually-hidden');
 
   window.renderFullScreenPhoto = renderPhoto;
 })();

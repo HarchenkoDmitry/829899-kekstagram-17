@@ -1,20 +1,41 @@
 'use strict';
 
 (function () {
-  function renderPicture(fragment, template, picture) {
-    var pictureClone = template.cloneNode(true);
-    var img = pictureClone.querySelector('.picture__img');
-    var likes = pictureClone.querySelector('.picture__likes');
-    var comments = pictureClone.querySelector('.picture__comments');
+  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+  var picturesContainer = document.querySelector('.pictures');
 
-    img.src = picture.url;
-    likes.textContent = picture.likes;
-    comments.textContent = String(picture.comments.length);
+  function Picture(data) {
+    this.data = data;
+    this.url = data.url;
+    this.likes = data.likes;
+    this.description = data.description;
+    this.comments = data.comments;
 
-    fragment.appendChild(pictureClone);
-
-    return fragment;
+    this.pictureElement = pictureTemplate.cloneNode(true);
   }
 
-  window.renderPicture = renderPicture;
+  Picture.prototype.create = function () {
+    var img = this.pictureElement.querySelector('.picture__img');
+    var likes = this.pictureElement.querySelector('.picture__likes');
+    var comments = this.pictureElement.querySelector('.picture__comments');
+
+    img.src = this.url;
+    likes.textContent = this.likes;
+    comments.textContent = String(this.comments.length);
+
+    this.pictureElement.addEventListener('click', this.callRendering.bind(this));
+
+    return this.pictureElement;
+  };
+
+  Picture.prototype.remove = function () {
+    this.pictureElement.removeEventListener('click', this.callRendering);
+    picturesContainer.removeChild(this.pictureElement);
+  };
+
+  Picture.prototype.callRendering = function () {
+    window.renderFullScreenPhoto(this.data);
+  };
+
+  window.Picture = Picture;
 })();
