@@ -59,7 +59,5 @@
   commentsCount.classList.add('visually-hidden');
   commentLoader.classList.add('visually-hidden');
 
-  resetPhoto();
-
   window.renderFullScreenPhoto = renderPhoto;
 })();
