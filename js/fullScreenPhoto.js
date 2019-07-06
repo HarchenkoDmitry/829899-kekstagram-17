@@ -6,6 +6,8 @@
   var photo = modalContainer.querySelector('.big-picture__img img');
   var description = modalContainer.querySelector('.social__caption');
   var likes = modalContainer.querySelector('.likes-count');
+  var commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+  var commentsContainer = modalContainer.querySelector('.social__comments');
   var commentsCount = modalContainer.querySelector('.social__comment-count');
   var commentLoader = modalContainer.querySelector('.comments-loader');
 
@@ -21,25 +23,29 @@
   }
 
   function renderComments(commentsData) {
-    var commentsContainer = document.querySelector('.social__comments');
     var comments = commentsContainer.querySelectorAll('.social__comment');
     var fragment = document.createDocumentFragment();
-    var commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
 
     comments.forEach(function (comment) {
       commentsContainer.removeChild(comment);
     });
 
     commentsData.forEach(function (comment) {
-      var commentClone = commentTemplate.cloneNode(true);
-      var img = commentClone.querySelector('.social__picture');
-      var text = commentClone.querySelector('.social__text');
-      img.src = comment.avatar;
-      text.textContent = comment.message;
+      var commentClone = createComment(comment);
       fragment.appendChild(commentClone);
     });
 
     commentsContainer.appendChild(fragment);
+  }
+
+  function createComment(comment) {
+    var commentClone = commentTemplate.cloneNode(true);
+    var img = commentClone.querySelector('.social__picture');
+    var text = commentClone.querySelector('.social__text');
+    img.src = comment.avatar;
+    text.textContent = comment.message;
+
+    return commentClone;
   }
 
   window.renderFullScreenPhoto = renderPhoto;
