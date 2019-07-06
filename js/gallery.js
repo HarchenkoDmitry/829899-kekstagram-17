@@ -6,6 +6,7 @@
   var imgsEffectEffect = document.querySelectorAll('.effects__preview');
   var inputUploadFile = document.querySelector('#upload-file');
 
+
   function renderPreviewImg(file) {
     var reader = new FileReader();
 
@@ -32,12 +33,12 @@
     return fragment;
   }
 
-  function renderPictures(picturesData) {
+  function renderPictures(pictures) {
     var pictureContainer = document.querySelector('.pictures');
-    var pictures = pictureContainer.querySelectorAll('.picture');
-    var fragment = createPictures(picturesData);
+    var picturesWrap = pictureContainer.querySelectorAll('.picture');
+    var fragment = createPictures(pictures);
 
-    pictures.forEach(function (picture) {
+    picturesWrap.forEach(function (picture) {
       pictureContainer.removeChild(picture);
     });
     pictureContainer.appendChild(fragment);
@@ -46,6 +47,7 @@
   function successHandler(pictures) {
     renderPictures(pictures);
     window.filter(pictures);
+    addHandlerToGallery(pictures);
   }
 
   function errorHandler(errorMassage) {
@@ -55,13 +57,21 @@
     document.body.appendChild(massageContainer);
   }
 
-
   inputUploadFile.addEventListener('change', function () {
     var file = inputUploadFile.files[0];
     if (~file.type.indexOf('image')) {
       renderPreviewImg(file);
     }
   });
+
+  function addHandlerToGallery(picturesData) {
+    var pictures = document.querySelectorAll('.picture');
+    pictures.forEach(function (picture, i) {
+      picture.addEventListener('click', function () {
+        window.renderFullScreenPhoto(picturesData[i]);
+      });
+    });
+  }
 
   window.backend(successHandler, errorHandler);
   window.renderPictures = renderPictures;
