@@ -12,11 +12,11 @@
   var commentLoader = modalContainer.querySelector('.comments-loader');
 
   function renderPhoto(picture) {
-    fullScreenModal.open();
     photo.src = picture.url;
     description.textContent = picture.description;
     likes.textContent = picture.likes;
     renderComments(picture.comments);
+    fullScreenModal.open();
   }
 
   function renderComments(commentsData) {
