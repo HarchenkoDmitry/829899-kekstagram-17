@@ -14,44 +14,35 @@
   };
 
   function Modal(classNameModal) {
-    var modal = this;
-    var container = document.querySelector(classNameModal);
-    var btnClose = container.querySelector('.cancel');
-    this.onOpen = function () {};
-    this.onClose = function () {};
+    this.container = document.querySelector(classNameModal);
+    var btnClose = this.container.querySelector('.cancel');
 
-    this.open = function () {
-      modal.onOpen();
-      container.classList.remove('hidden');
-      document.addEventListener('keydown', this.onModalEscPress);
-      scrollBar.off();
-    };
-
-    this.close = function () {
-      modal.onClose();
-      container.classList.add('hidden');
-      document.removeEventListener('keydown', this.onModalEscPress);
-      scrollBar.on();
-    };
-
-    this.onModalEscPress = function (evt) {
-      if (evt.keyCode === 27) {
-        modal.close();
-      }
-    };
-
-    btnClose.addEventListener('click', modal.close);
+    btnClose.addEventListener('click', this.close.bind(this));
   }
 
-  // Modal.prototype.open = function () {
-  //   this.container.classList.remove('hidden');
-  //   document.addEventListener('keydown', onModalEscPress);
-  // };
+  Modal.prototype.open = function () {
+    this.onOpen();
+    this.container.classList.remove('hidden');
+    document.addEventListener('keydown', this.onModalEscPress.bind(this));
+    scrollBar.off();
+  };
 
-  // Modal.prototype.close = function () {
-  //   this.container.classList.add('hidden');
-  //   document.removeEventListener('keydown', onModalEscPress);
-  // };
+  Modal.prototype.close = function () {
+    this.onClose();
+    this.container.classList.add('hidden');
+    document.removeEventListener('keydown', this.onModalEscPress.bind(this));
+    scrollBar.on();
+  };
+
+  Modal.prototype.onModalEscPress = function (evt) {
+    if (evt.keyCode === 27) {
+      this.close();
+    }
+  };
+
+  Modal.prototype.onOpen = function () {};
+  Modal.prototype.onClose = function () {};
+
 
   window.Modal = Modal;
 })();
