@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var mainContainer = document.querySelector('main');
   var form = document.querySelector('.img-upload__form');
   var inputUploadFile = form.querySelector('#upload-file');
   var inputHashTags = form.querySelector('.text__hashtags');
@@ -64,7 +65,7 @@
     var messageTemplate = document.querySelector('#' + classNameMessage)
       .content.querySelector('.' + classNameMessage)
       .cloneNode(true);
-    document.querySelector('main').appendChild(messageTemplate);
+    mainContainer.appendChild(messageTemplate);
     messageTemplate.addEventListener('click', hideMessage);
     document.addEventListener('keydown', onMessageEscPress);
   }
@@ -77,7 +78,7 @@
 
   function hideMessage() {
     var message = document.querySelector('main .messageLoad');
-    document.querySelector('main').removeChild(message);
+    mainContainer.removeChild(message);
     document.removeEventListener('keydown', onMessageEscPress);
   }
 
