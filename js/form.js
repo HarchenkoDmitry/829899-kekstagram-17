@@ -3,12 +3,60 @@
 (function () {
   var form = document.querySelector('.img-upload__form');
   var inputUploadFile = form.querySelector('#upload-file');
+  var inputHashTags = form.querySelector('.text__hashtags');
+  var inputComment = form.querySelector('.text__description');
 
   var formModal = new window.Modal('.img-upload__overlay');
 
+  function addValidationHashTags() {
+    var hashTags = inputHashTags.value
+      .split(' ')
+      .map(function (hashTag) {
+        return hashTag.toLowerCase();
+      });
+
+    var message = '';
+
+    if (hashTags.length > 5) {
+      message = 'Нельзя указать больше пяти хэш-тегов';
+    } else {
+      for (var i = 0; i < hashTags.length; i++) {
+        message = validationHashTag(hashTags, i);
+        if (message) {
+          break;
+        }
+      }
+    }
+
+    inputHashTags.setCustomValidity(message);
+  }
+
+  function validationHashTag(hashTags, i) {
+    var message = '';
+    if (hashTags[i].charAt(0) !== '#') {
+      message = 'Хеш-теги должны начинаться с "#"';
+
+    } else if (hashTags[i].length === 1) {
+      message = 'Хеш-теги должны состоять хотя бы из одного символа';
+
+    } else if (hashTags[i].indexOf('#', 1) > 0) {
+      message = 'Хеш-теги должны разделяться пробелами';
+
+    } else if (hashTags.indexOf(hashTags[i], i + 1) > 0) {
+      message = 'Один и тот же хэш-тег не может быть использован дважды';
+
+    } else if (hashTags[i].length > 20) {
+      message = 'Максимальная длина одного хэш-тега 20 символов';
+    }
+    return message;
+  }
+
   formModal.onModalEscPress = function (evt) {
-    if (evt.keyCode === 27 && !document.activeElement.classList.contains('text__description')) {
-      formModal.close();
+    if (evt.keyCode === 27) {
+      var focusElement = document.activeElement;
+      if (focusElement !== inputComment && focusElement !== inputHashTags) {
+        formModal.close();
+      }
     }
   };
 
@@ -25,4 +73,9 @@
       window.applyEffectOnImage();
     }
   });
+
+  inputHashTags.addEventListener('input', function () {
+    addValidationHashTags();
+  });
+
 })();
