@@ -77,7 +77,7 @@
   }
 
   function hideMessage() {
-    var message = document.querySelector('main .messageLoad');
+    var message = mainContainer.querySelector('.messageLoad');
     mainContainer.removeChild(message);
     document.removeEventListener('keydown', onMessageEscPress);
   }

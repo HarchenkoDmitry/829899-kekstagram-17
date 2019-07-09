@@ -9,7 +9,7 @@
     },
 
     save: function (data, onSuccess, onError) {
-      var URL = 'https://js.dump.academy/kekstagrasm';
+      var URL = 'https://js.dump.academy/kekstagram';
       createRequest('POST', URL, onSuccess, onError, data);
     }
   };
