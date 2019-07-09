@@ -1271,7 +1271,7 @@ main {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 2;
 
   background-color: rgba(0, 0, 0, 0.8);
 }
@@ -1417,6 +1417,7 @@ main {
   font-weight: bold;
   text-align: center;
   padding: 10px 20px;
+  z-index: 5;
 }
 
 

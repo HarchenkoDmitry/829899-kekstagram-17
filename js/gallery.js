@@ -66,6 +66,6 @@
     }
   });
 
-  window.backend(successHandler, errorHandler);
+  window.backend.load(successHandler, errorHandler);
   window.renderPictures = renderPictures;
 })();

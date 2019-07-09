@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var mainContainer = document.querySelector('main');
   var form = document.querySelector('.img-upload__form');
   var inputUploadFile = form.querySelector('#upload-file');
   var inputHashTags = form.querySelector('.text__hashtags');
@@ -51,6 +52,36 @@
     return message;
   }
 
+  function onSuccess() {
+    formModal.close();
+    showMessage('success');
+  }
+
+  function onError() {
+    showMessage('error');
+  }
+
+  function showMessage(classNameMessage) {
+    var messageTemplate = document.querySelector('#' + classNameMessage)
+      .content.querySelector('.' + classNameMessage)
+      .cloneNode(true);
+    mainContainer.appendChild(messageTemplate);
+    messageTemplate.addEventListener('click', hideMessage);
+    document.addEventListener('keydown', onMessageEscPress);
+  }
+
+  function onMessageEscPress(evt) {
+    if (evt.keyCode === 27) {
+      hideMessage();
+    }
+  }
+
+  function hideMessage() {
+    var message = mainContainer.querySelector('.messageLoad');
+    mainContainer.removeChild(message);
+    document.removeEventListener('keydown', onMessageEscPress);
+  }
+
   formModal.onModalEscPress = function (evt) {
     if (evt.keyCode === 27) {
       var focusElement = document.activeElement;
@@ -76,6 +107,12 @@
 
   inputHashTags.addEventListener('input', function () {
     addValidationHashTags();
+  });
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var data = new FormData(form);
+    window.backend.save(data, onSuccess, onError);
   });
 
 })();
