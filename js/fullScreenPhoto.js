@@ -10,18 +10,20 @@
   var commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
   var commentsContainer = modalContainer.querySelector('.social__comments');
   var commentLoader = modalContainer.querySelector('.comments-loader');
+  var currentCount = modalContainer.querySelector('.comments-current-count');
+  var count = modalContainer.querySelector('.comments-count');
   var loadMoreComments = function () {};
 
-  function addLoadMoreComments() {
+  function addHandlerOnCommentLoader() {
     commentLoader.addEventListener('click', loadMoreComments);
   }
 
   function makeCountComments() {
-    var currentCount = 0;
+    var currentCountComments = 0;
 
     return function () {
-      currentCount += COMMENT_AMOUNT;
-      return currentCount;
+      currentCountComments += COMMENT_AMOUNT;
+      return currentCountComments;
     };
   }
 
@@ -34,7 +36,7 @@
     description.textContent = picture.description;
     likes.textContent = picture.likes;
     renderComments(picture.comments, countComments);
-    addLoadMoreComments();
+    addHandlerOnCommentLoader();
     fullScreenModal.open();
   }
 
@@ -42,7 +44,7 @@
     var fragment = document.createDocumentFragment();
     var currentCountComments = countComments();
 
-    var endCount = calculationCountComments(commentsData, currentCountComments);
+    var endCount = calculateCountComments(commentsData, currentCountComments);
 
     for (var i = currentCountComments - COMMENT_AMOUNT; i < endCount; i++) {
       var commentClone = createComment(commentsData[i]);
@@ -62,10 +64,7 @@
     return commentClone;
   }
 
-  function calculationCountComments(commentsData, currentCountComments) {
-    var currentCount = modalContainer.querySelector('.comments-current-count');
-    var count = modalContainer.querySelector('.comments-count');
-
+  function calculateCountComments(commentsData, currentCountComments) {
     var commentsAmount = commentsData.length;
     var isMoreComments = commentsAmount < currentCountComments;
     var endCount = isMoreComments ? commentsAmount : currentCountComments;
