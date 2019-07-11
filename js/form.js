@@ -99,9 +99,8 @@
   inputUploadFile.addEventListener('change', function () {
     var file = inputUploadFile.files[0];
     if (~file.type.indexOf('image')) {
-      formModal.open();
-
       window.applyEffectOnImage();
+      formModal.open();
     }
   });
 
