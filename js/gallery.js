@@ -3,7 +3,7 @@
 
 (function () {
   var imgPreview = document.querySelector('.img-upload__preview img');
-  var imgsEffectEffect = document.querySelectorAll('.effects__preview');
+  var imgsEffect = document.querySelectorAll('.effects__preview');
   var inputUploadFile = document.querySelector('#upload-file');
   var pictures = [];
 
@@ -19,18 +19,20 @@
 
     reader.addEventListener('loadend', function () {
       imgPreview.src = reader.result;
-      imgsEffectEffect.forEach(function (img) {
+      imgsEffect.forEach(function (img) {
         img.style.backgroundImage = 'url(' + reader.result + ')';
       });
+      window.addHandlerChangeEffect();
+      window.formModal.open();
     });
   }
 
   function createPictures(picturesData) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < picturesData.length; i++) {
-      pictures[i] = new window.Picture(picturesData[i]);
+    picturesData.forEach(function (pictureData, i) {
+      pictures[i] = new window.Picture(pictureData);
       fragment.appendChild(pictures[i].create());
-    }
+    });
     return fragment;
   }
 

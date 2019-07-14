@@ -9,13 +9,13 @@
   var likes = modalContainer.querySelector('.likes-count');
   var commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
   var commentsContainer = modalContainer.querySelector('.social__comments');
-  var commentLoader = modalContainer.querySelector('.comments-loader');
+  var commentsLoader = modalContainer.querySelector('.comments-loader');
   var currentCount = modalContainer.querySelector('.comments-current-count');
   var count = modalContainer.querySelector('.comments-count');
   var loadMoreComments = function () {};
 
-  function addHandlerOnCommentLoader() {
-    commentLoader.addEventListener('click', loadMoreComments);
+  function addHandlerOnCommentsLoader() {
+    commentsLoader.addEventListener('click', loadMoreComments);
   }
 
   function makeCountComments() {
@@ -36,7 +36,7 @@
     description.textContent = picture.description;
     likes.textContent = picture.likes;
     renderComments(picture.comments, countComments);
-    addHandlerOnCommentLoader();
+    addHandlerOnCommentsLoader();
     fullScreenModal.open();
   }
 
@@ -69,7 +69,7 @@
     var isMoreComments = commentsAmount < currentCountComments;
     var endCount = isMoreComments ? commentsAmount : currentCountComments;
 
-    commentLoader.classList.toggle('hidden', isMoreComments);
+    commentsLoader.classList.toggle('hidden', isMoreComments);
 
     currentCount.textContent = endCount;
     count.textContent = commentsAmount;
@@ -91,7 +91,7 @@
 
   fullScreenModal.onClose = function () {
     resetPhoto();
-    commentLoader.removeEventListener('click', loadMoreComments);
+    commentsLoader.removeEventListener('click', loadMoreComments);
   };
 
   window.renderFullScreenPhoto = renderPhoto;

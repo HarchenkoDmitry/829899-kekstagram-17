@@ -43,29 +43,30 @@
     }
   };
 
-  var imgPreview = document.querySelector('.img-upload__preview img');
-  var btnZoomOut = document.querySelector('.scale__control--smaller');
-  var btnZoomOn = document.querySelector('.scale__control--bigger');
-  var valueScaleControl = document.querySelector('.scale__control--value');
-  var imageEffectSwitches = document.querySelectorAll('.effects__radio');
-  var sliderLevelEffect = document.querySelector('.img-upload__effect-level');
-  var pinLevelEffect = document.querySelector('.effect-level__pin');
-  var depthLevelEffect = document.querySelector('.effect-level__depth');
+  var imgPreviewContainer = document.querySelector('.img-upload');
+  var imgPreview = imgPreviewContainer.querySelector('.img-upload__preview img');
+  var btnZoomOut = imgPreviewContainer.querySelector('.scale__control--smaller');
+  var btnZoomOn = imgPreviewContainer.querySelector('.scale__control--bigger');
+  var valueScaleControl = imgPreviewContainer.querySelector('.scale__control--value');
+  var imageEffectSwitches = imgPreviewContainer.querySelectorAll('.effects__radio');
+  var sliderLevelEffect = imgPreviewContainer.querySelector('.img-upload__effect-level');
+  var pinLevelEffect = imgPreviewContainer.querySelector('.effect-level__pin');
+  var depthLevelEffect = imgPreviewContainer.querySelector('.effect-level__depth');
   var currentEffectName = 'none';
   var currentFilter = FILTER_DATA[currentEffectName];
 
-  function resizeImage() {
+  function addHandlerResize() {
     btnZoomOut.addEventListener('click', function () {
-      resize(-1);
+      resizeImage(-1);
     });
 
     btnZoomOn.addEventListener('click', function () {
-      resize(1);
+      resizeImage(1);
     });
   }
 
-  function resize(sign) {
-    var size = parseInt(valueScaleControl.value, 10) + STEP_SCALE * sign;
+  function resizeImage(direction) {
+    var size = parseInt(valueScaleControl.value, 10) + STEP_SCALE * direction;
     if (size > MAX_VALUE_SCALE) {
       size = MAX_VALUE_SCALE;
     } else if (size < MIN_VALUE_SCALE) {
@@ -128,18 +129,17 @@
 
     pinLevelEffect.style.left = ratio * 100 + '%';
     depthLevelEffect.style.width = ratio * 100 + '%';
-    imgPreview.style.filter = (filter) ? filter.name + '(' + filterRatio + filter.dimension + ')' : '';
+    imgPreview.style.filter = (filter.name) ? filter.name + '(' + filterRatio + filter.dimension + ')' : '';
   }
 
   function resetPhotoChanges() {
-    imgPreview.style.transform = '';
-    imgPreview.classList.remove(imgPreview.classList[0]);
+    imgPreview.style = '';
+    imgPreview.classList.remove('effects__preview--' + currentEffectName);
     currentEffectName = 'none';
     currentFilter = FILTER_DATA[currentEffectName];
-    changeLevelEffects(1, '');
   }
 
-  function applyEffectOnImage() {
+  function addHandlerChangeEffect() {
     changeEffect(imageEffectSwitches[0]);
     imageEffectSwitches.forEach(function (item) {
       item.addEventListener('click', function () {
@@ -148,10 +148,10 @@
     });
   }
 
-  resizeImage();
+  addHandlerResize();
   addMouseEventListener();
 
   window.resetPhotoChanges = resetPhotoChanges;
-  window.applyEffectOnImage = applyEffectOnImage;
+  window.addHandlerChangeEffect = addHandlerChangeEffect;
 })();
 

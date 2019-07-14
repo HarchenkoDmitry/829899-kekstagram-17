@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var filter = function (data) {
+  function filter(data) {
     var AMOUNT_NEW_PICTURES = 10;
     var DELAY_TIME = 500;
     var FilterName = {
@@ -13,7 +13,7 @@
     var filterContainer = document.querySelector('.img-filters');
     var filterButtons = filterContainer.querySelectorAll('.img-filters__button');
     var activeClassButton = 'img-filters__button--active';
-    var timerId;
+    var timerId = 0;
     var buttonChecked = filterButtons[0];
 
     function showFilter() {
@@ -29,20 +29,16 @@
     }
 
     function changeFilter(btn) {
-      var filterName = btn.id;
-
       filterButtons.forEach(function (btnItem) {
         btnItem.classList.remove(activeClassButton);
       });
       btn.classList.add(activeClassButton);
 
-      if (timerId) {
-        clearTimeout(timerId);
-      }
+      clearTimeout(timerId);
 
       timerId = setTimeout(function () {
         if (buttonChecked !== btn) {
-          applyFilter(filterName);
+          applyFilter(btn.id);
           buttonChecked = btn;
         }
       }, DELAY_TIME);
@@ -74,7 +70,7 @@
 
     showFilter();
     addHandlerToFilter();
-  };
+  }
 
   window.filter = filter;
 })();

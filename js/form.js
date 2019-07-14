@@ -2,14 +2,13 @@
 
 (function () {
   var mainContainer = document.querySelector('main');
-  var form = document.querySelector('.img-upload__form');
-  var inputUploadFile = form.querySelector('#upload-file');
+  var form = mainContainer.querySelector('.img-upload__form');
   var inputHashTags = form.querySelector('.text__hashtags');
   var inputComment = form.querySelector('.text__description');
 
   var formModal = new window.Modal('.img-upload__overlay');
 
-  function addValidationHashTags() {
+  function validateHashTags() {
     var hashTags = inputHashTags.value
       .split(' ')
       .map(function (hashTag) {
@@ -22,7 +21,7 @@
       message = 'Нельзя указать больше пяти хэш-тегов';
     } else {
       for (var i = 0; i < hashTags.length; i++) {
-        message = validationHashTag(hashTags, i);
+        message = checkHashTag(hashTags, i);
         if (message) {
           break;
         }
@@ -32,7 +31,7 @@
     inputHashTags.setCustomValidity(message);
   }
 
-  function validationHashTag(hashTags, i) {
+  function checkHashTag(hashTags, i) {
     var message = '';
     if (hashTags[i].charAt(0) !== '#') {
       message = 'Хеш-теги должны начинаться с "#"';
@@ -52,18 +51,18 @@
     return message;
   }
 
-  function onSuccess() {
+  function onSubmitSuccess() {
     formModal.close();
     showMessage('success');
   }
 
-  function onError() {
+  function onSubmitError() {
     showMessage('error');
   }
 
-  function showMessage(classNameMessage) {
-    var messageTemplate = document.querySelector('#' + classNameMessage)
-      .content.querySelector('.' + classNameMessage)
+  function showMessage(messageType) {
+    var messageTemplate = document.querySelector('#' + messageType)
+      .content.querySelector('.' + messageType)
       .cloneNode(true);
     mainContainer.appendChild(messageTemplate);
     messageTemplate.addEventListener('click', hideMessage);
@@ -84,7 +83,7 @@
 
   formModal.onModalEscPress = function (evt) {
     if (evt.keyCode === 27) {
-      var focusElement = document.activeElement;
+      var focusElement = evt.target;
       if (focusElement !== inputComment && focusElement !== inputHashTags) {
         formModal.close();
       }
@@ -96,22 +95,16 @@
     window.resetPhotoChanges();
   };
 
-  inputUploadFile.addEventListener('change', function () {
-    var file = inputUploadFile.files[0];
-    if (~file.type.indexOf('image')) {
-      window.applyEffectOnImage();
-      formModal.open();
-    }
-  });
-
   inputHashTags.addEventListener('input', function () {
-    addValidationHashTags();
+    validateHashTags();
   });
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
     var data = new FormData(form);
-    window.backend.save(data, onSuccess, onError);
+    window.backend.save(data, onSubmitSuccess, onSubmitError);
   });
+
+  window.formModal = formModal;
 
 })();
